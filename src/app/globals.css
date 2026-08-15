@@ -1,0 +1,154 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import "tailwindcss";
+
+@theme inline {
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-ink: #0a0e17;
+  --color-surface: #121826;
+  --color-surface-2: #171f30;
+  --color-surface-3: #1e2740;
+  --color-paper: #f3f5f9;
+  --color-paper-surface: #ffffff;
+  --color-paper-surface-2: #eaeef5;
+
+  --color-amber: #f5a623;
+  --color-amber-soft: #ffd58a;
+  --color-cyan: #4fd1e8;
+  --color-cyan-soft: #a6ecf7;
+  --color-violet: #8b7ff0;
+  --color-severe: #f0553f;
+  --color-good: #3ecf8e;
+
+  --color-text-primary: #eef1f7;
+  --color-text-secondary: #9aa4bd;
+  --color-text-primary-light: #12172a;
+  --color-text-secondary-light: #5b6478;
+
+  --color-border-dark: rgba(255, 255, 255, 0.08);
+  --color-border-light: rgba(16, 21, 33, 0.08);
+}
+
+:root {
+  color-scheme: dark;
+  --bg: var(--color-ink);
+  --surface: var(--color-surface);
+  --surface-2: var(--color-surface-2);
+  --surface-3: var(--color-surface-3);
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --border: var(--color-border-dark);
+}
+
+:root:not(.dark) {
+  color-scheme: light;
+  --bg: var(--color-paper);
+  --surface: var(--color-paper-surface);
+  --surface-2: var(--color-paper-surface-2);
+  --surface-3: #dfe4ee;
+  --text-primary: var(--color-text-primary-light);
+  --text-secondary: var(--color-text-secondary-light);
+  --border: var(--color-border-light);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-amber);
+  color: var(--color-ink);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Thin scrollbars for horizontally-scrolling timelines */
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 999px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Glass panel utility */
+.glass {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+}
+
+@keyframes drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-drift {
+  animation: drift 60s linear infinite;
+}
+
+@keyframes fall {
+  from {
+    transform: translateY(-10%);
+  }
+  to {
+    transform: translateY(110%);
+  }
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
