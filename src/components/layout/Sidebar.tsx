@@ -56,9 +56,7 @@ export function Sidebar() {
 
       <div className="border-t border-[var(--border)] px-6 py-4">
         <p className="font-mono text-[10px] leading-relaxed text-[var(--text-secondary)]">
-          DATA SOURCE
-          <br />
-          OPEN-METEO.COM
+          WEATHER
         </p>
       </div>
     </aside>
