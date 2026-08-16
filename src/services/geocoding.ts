@@ -21,6 +21,11 @@ export async function reverseGeocode(
   latitude: number,
   longitude: number
 ): Promise<GeoLocation> {
+  const userTimezone =
+    typeof window !== "undefined"
+      ? Intl.DateTimeFormat().resolvedOptions().timeZone
+      : "Asia/Kolkata";
+
   try {
     const res = await fetch(
       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
@@ -43,7 +48,7 @@ export async function reverseGeocode(
           longitude,
           country: data.countryName || "India",
           admin1: data.principalSubdivision || "Bihar",
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata",
+          timezone: userTimezone || "Asia/Kolkata",
         };
       }
     }
@@ -58,6 +63,6 @@ export async function reverseGeocode(
     longitude,
     country: "India",
     admin1: "Bihar",
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata",
+    timezone: userTimezone || "Asia/Kolkata",
   };
 }
