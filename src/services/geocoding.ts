@@ -22,18 +22,19 @@ export async function reverseGeocode(
   longitude: number
 ): Promise<GeoLocation> {
   try {
-    // 1. BigDataCloud API - Fast reverse geocoding for exact city/town name
+    // Precise GPS Reverse Geocoding
     const res = await fetch(
       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
     );
 
     if (res.ok) {
       const data = await res.json();
-      
+
+      // Madhubani jise districts/locality me accurate name pick karein
       const cityName =
-        data.city ||
         data.locality ||
-        data.localityInfo?.informative?.[0]?.name ||
+        data.city ||
+        data.principalSubdivisionCode?.split("-")[1] ||
         data.principalSubdivision;
 
       if (cityName) {
@@ -42,16 +43,15 @@ export async function reverseGeocode(
           name: cityName,
           latitude,
           longitude,
-          country: data.countryName || "",
-          admin1: data.principalSubdivision || "",
+          country: data.countryName || "India",
+          admin1: data.principalSubdivision || "Bihar",
         };
       }
     }
   } catch (e) {
-    console.error("Reverse geocoding failed, falling back to coordinates", e);
+    console.error("Reverse geocoding error:", e);
   }
 
-  // Fallback: If API fails, show formatted coordinates instead of generic "My Location"
   return {
     id: Date.now(),
     name: `${latitude.toFixed(2)}°, ${longitude.toFixed(2)}°`,

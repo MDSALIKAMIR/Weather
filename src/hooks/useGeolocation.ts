@@ -97,7 +97,7 @@ export function useGeolocation() {
           {
             enableHighAccuracy: true,
             timeout: 20000,
-            maximumAge: 60 * 1000,
+            maximumAge: 0,
           }
         );
       });
