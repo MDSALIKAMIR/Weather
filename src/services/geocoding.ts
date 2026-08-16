@@ -22,7 +22,6 @@ export async function reverseGeocode(
   longitude: number
 ): Promise<GeoLocation> {
   try {
-    // Precise GPS Reverse Geocoding
     const res = await fetch(
       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
     );
@@ -30,7 +29,6 @@ export async function reverseGeocode(
     if (res.ok) {
       const data = await res.json();
 
-      // Madhubani jise districts/locality me accurate name pick karein
       const cityName =
         data.locality ||
         data.city ||
@@ -45,6 +43,7 @@ export async function reverseGeocode(
           longitude,
           country: data.countryName || "India",
           admin1: data.principalSubdivision || "Bihar",
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata",
         };
       }
     }
@@ -57,5 +56,8 @@ export async function reverseGeocode(
     name: `${latitude.toFixed(2)}°, ${longitude.toFixed(2)}°`,
     latitude,
     longitude,
+    country: "India",
+    admin1: "Bihar",
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata",
   };
 }
