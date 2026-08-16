@@ -3,15 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, MapPin, Search, Star, X } from "lucide-react";
-import { searchLocations } from "@/services/geocoding";
+import { searchLocations, reverseGeocode } from "@/services/geocoding";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useGeolocation } from "@/hooks/useGeolocation";
-import { reverseGeocode } from "@/services/geocoding";
 import { useApp } from "@/context/AppContext";
 import type { GeoLocation } from "@/types/weather";
 import { cn } from "@/lib/utils";
 
-export function LocationSearch({ className, expanded = false }: { className?: string; expanded?: boolean }) {
+export function LocationSearch({
+  className,
+  expanded = false,
+}: {
+  className?: string;
+  expanded?: boolean;
+}) {
   const { location, setLocation, addFavorite, isFavorite } = useApp();
   const { locate, loading: locating } = useGeolocation();
   const [query, setQuery] = useState("");
@@ -30,16 +35,19 @@ export function LocationSearch({ className, expanded = false }: { className?: st
     let cancelled = false;
     setSearching(true);
     setError(null);
+
     searchLocations(debounced)
       .then((res) => {
-        if (!cancelled) setResults(res);
+        if (!cancelled) setResults(res || []);
       })
       .catch(() => {
-        if (!cancelled) setError("Couldn't search locations. Check your connection.");
+        if (!cancelled)
+          setError("Couldn't search locations. Check your connection.");
       })
       .finally(() => {
         if (!cancelled) setSearching(false);
       });
+
     return () => {
       cancelled = true;
     };
@@ -47,7 +55,10 @@ export function LocationSearch({ className, expanded = false }: { className?: st
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     }
@@ -70,7 +81,9 @@ export function LocationSearch({ className, expanded = false }: { className?: st
       setLocation(loc);
       setOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not get your location.");
+      setError(
+        err instanceof Error ? err.message : "Could not get your location."
+      );
     }
   }
 
@@ -91,7 +104,9 @@ export function LocationSearch({ className, expanded = false }: { className?: st
           aria-label="Search for a city"
           className="w-full bg-transparent text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none"
         />
-        {searching && <Loader2 size={14} className="animate-spin text-[var(--text-secondary)]" />}
+        {searching && (
+          <Loader2 size={14} className="animate-spin text-[var(--text-secondary)]" />
+        )}
         {query && !searching && (
           <button aria-label="Clear search" onClick={() => setQuery("")}>
             <X size={14} className="text-[var(--text-secondary)]" />
@@ -103,7 +118,11 @@ export function LocationSearch({ className, expanded = false }: { className?: st
           aria-label="Use my current location"
           className="flex shrink-0 items-center gap-1 rounded-full bg-[var(--surface-3)] px-2.5 py-1 text-xs text-[var(--text-primary)] hover:bg-[var(--color-amber)] hover:text-[var(--color-ink)] disabled:opacity-60"
         >
-          {locating ? <Loader2 size={12} className="animate-spin" /> : <MapPin size={12} />}
+          {locating ? (
+            <Loader2 size={12} className="animate-spin" />
+          ) : (
+            <MapPin size={12} />
+          )}
           <span className="hidden sm:inline">My location</span>
         </button>
       </div>
@@ -117,7 +136,11 @@ export function LocationSearch({ className, expanded = false }: { className?: st
             transition={{ duration: 0.15 }}
             className="glass absolute left-0 right-0 top-12 z-30 max-h-80 overflow-y-auto rounded-2xl p-2 shadow-2xl"
           >
-            {error && <p className="px-3 py-2 text-sm text-[var(--color-severe)]">{error}</p>}
+            {error && (
+              <p className="px-3 py-2 text-sm text-[var(--color-severe)]">
+                {error}
+              </p>
+            )}
             {!error && results.length === 0 && !searching && query && (
               <p className="px-3 py-4 text-center text-sm text-[var(--text-secondary)]">
                 No matching cities found.
@@ -130,7 +153,9 @@ export function LocationSearch({ className, expanded = false }: { className?: st
                 className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-[var(--surface-3)]"
               >
                 <span className="min-w-0">
-                  <span className="block truncate text-sm font-medium text-[var(--text-primary)]">{r.name}</span>
+                  <span className="block truncate text-sm font-medium text-[var(--text-primary)]">
+                    {r.name}
+                  </span>
                   <span className="block truncate text-xs text-[var(--text-secondary)]">
                     {[r.admin1, r.country].filter(Boolean).join(", ")}
                   </span>
